@@ -1,0 +1,5 @@
+[backoff]
+strategy = "Exponential"
+initial_delay = "100ms"
+factor = 2.0
+max_retries = 8

@@ -1,0 +1,32 @@
+[package]
+name = "backoff-config"
+version = "0.0.1"
+edition = "2024"
+authors = ["Daniyil Yevtyushkin <d.yevtyushkin.dev@gmail.com>"]
+description = "Flexible backoff configuration in Rust"
+license = "MIT"
+repository = "https://github.com/yevtyushkin/backoff-config"
+homepage = "https://github.com/yevtyushkin/backoff-config"
+documentation = "https://docs.rs/backoff-config"
+readme = "README.md"
+categories = ["config"]
+keywords = ["backoff", "retry", "configuration", "serde", "backon"]
+exclude = ["examples/*", "tests/*", "*.md"]
+
+[dependencies]
+backon = { version = "1.5.0", default-features = false, features = ["std"] }
+duration-string = { version = "0.5.2", features = ["serde"] }
+serde = { version = "1.0.219", default-features = false, features = ["derive", "std"] }
+
+[dev-dependencies]
+backon = "1.5.0"
+figment = { version = "0.10.19", features = ["env", "test", "toml"] }
+tokio = { version = "1.45.0", features = ["rt-multi-thread", "macros"] }
+
+[package.metadata.docs.rs]
+features = ["std"]
+
+[package.metadata.release]
+sign-commit = true
+upload-doc = true
+push-remote = "origin"
