@@ -35,10 +35,13 @@ pub struct Config {
 // CONFIG__BACKOFF__STRATEGY=Constant
 // CONFIG__BACKOFF__DELAY=1s
 // CONFIG__BACKOFF__MAX_RETRIES=123
-
-let config = figment::Figment::new()
-.merge(Env::prefixed("CONFIG__").split("__"))
-.extract::<Config>() ?;
+fn main() {
+    let config = figment::Figment::new()
+        .merge(Env::prefixed("CONFIG__").split("__"))
+        .extract::<Config>()?;
+    
+    // do something with `config.backoff`
+}
 ```
 
 3. Use `config.backoff` to build and apply your backoff strategy when calling retryable operations.
