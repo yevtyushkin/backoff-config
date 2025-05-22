@@ -1,5 +1,7 @@
 # 🔄 `backoff-config` ⚙️
 
+[![codecov](https://codecov.io/github/yevtyushkin/backoff-config/graph/badge.svg?token=TKF2NSE4IT)](https://codecov.io/github/yevtyushkin/backoff-config)
+
 `backoff-config` makes configuring `backoff` more flexible by providing a unified `Backoff` strategy enum and a
 `BackoffConfig` that supports deserialization.
 
