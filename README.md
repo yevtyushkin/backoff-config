@@ -4,7 +4,7 @@
 `BackoffConfig` that supports deserialization.
 
 The actual backoff logic is powered by the awesome [backon](https://crates.io/crates/backon) crate. Make sure to check
-out [backon](https://crates.io/crates/backon) to explore its amazing features and ergonomics!   
+out [backon](https://crates.io/crates/backon) to explore its amazing features and ergonomics!
 
 `backoff-config` integrates with [backon](https://crates.io/crates/backon) by implementing:
 
@@ -14,47 +14,61 @@ out [backon](https://crates.io/crates/backon) to explore its amazing features an
 
 ## Usage
 
-1. Add to your `Cargo.toml`:
+1. Add `backoff-config` to your dependencies:
 
-    ```toml
-    backoff-config = "0.1"
-    ```
+```bash
+cargo add backoff-config
+```
 
-2. Load [`BackoffConfig`](src/backoff_config.rs) from your data source. Here’s an example using environment variables
-   and the [figment](https://crates.io/crates/figment) configuration library:
+2. Load `BackoffConfig` and use it straight away in retries. Example with [figment](https://crates.io/crates/figment):
 
 ```rust
 use serde::Deserialize;
+use backon::Retryable;
 
 #[derive(Deserialize)]
 pub struct Config {
     pub backoff: BackoffConfig,
 }
 
-// Example environment variables:
-// CONFIG__BACKOFF__STRATEGY=Constant
-// CONFIG__BACKOFF__DELAY=1s
-// CONFIG__BACKOFF__MAX_RETRIES=123
-fn main() {
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    // Env variables:
+    //
+    // CONFIG__BACKOFF__STRATEGY=Constant
+    // CONFIG__BACKOFF__DELAY=1s
+    // CONFIG__BACKOFF__MAX_RETRIES=4
     let config = figment::Figment::new()
         .merge(Env::prefixed("CONFIG__").split("__"))
         .extract::<Config>()?;
-    
-    // do something with `config.backoff`
+
+    // Use in retries: 
+    let response_body = fetch.retry(config.backoff).await?;
+    println!("Response body: {response_body}");
+
+    Ok(())
+}
+
+// Function that may fail
+async fn fetch() -> anyhow::Result<String> {
+    let body = reqwest::get("https://www.rust-lang.org")
+        .await?
+        .text()
+        .await?;
+
+    Ok(body)
 }
 ```
 
-3. Use `config.backoff` to build and apply your backoff strategy when calling retryable operations.
-
 ## Examples
 
-For an end-to-end usage example, see the [TOML example](examples/toml.rs) and run it with:
+- TOML + [figment](https://crates.io/crates/figment):
 
 ```bash
 cargo run --example toml
 ```
 
-For more examples on the data formats, see:
+And some examples on data formats:
 
-- [Env examples](tests/env.rs) – loading config from environment variables.
-- [TOML examples](tests/toml.rs) – loading config from a TOML file.
+- [Env](tests/env.rs) – loading config from environment variables.
+- [TOML](tests/toml.rs) – loading config from a TOML file.
