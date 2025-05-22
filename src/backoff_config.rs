@@ -1,7 +1,7 @@
-use crate::nullable::Nullable;
 use crate::*;
-use duration_string::DurationString;
+use duration_str::*;
 use serde::Deserialize;
+use std::time::Duration;
 
 #[derive(Debug, Clone, Copy, Deserialize, PartialEq)]
 #[serde(tag = "strategy")]
@@ -12,16 +12,14 @@ pub enum BackoffConfig {
         /// Backoff delay.
         ///
         /// Defaults to `500 millis` - see [defaults::delay].
-        #[serde(default = "defaults::delay")]
-        delay: DurationString,
+        #[serde(default = "defaults::delay", deserialize_with = "deserialize_duration")]
+        delay: Duration,
 
         /// Maximum amount of retries.
         ///
-        /// Removes the retry limit if the value is [Nullable::Null].
-        ///
         /// Defaults to `4` - see [defaults::max_retries].
         #[serde(default = "defaults::max_retries")]
-        max_retries: Nullable<usize>,
+        max_retries: usize,
 
         /// Whether jitter is enabled.
         ///
@@ -41,8 +39,8 @@ pub enum BackoffConfig {
         /// Initial backoff delay.
         ///
         /// Defaults to `500 millis` - see [defaults::delay].
-        #[serde(default = "defaults::delay")]
-        initial_delay: DurationString,
+        #[serde(default = "defaults::delay", deserialize_with = "deserialize_duration")]
+        initial_delay: Duration,
 
         /// Backoff factor.
         ///
@@ -52,25 +50,27 @@ pub enum BackoffConfig {
 
         /// Maximum backoff delay.
         ///
-        /// Removes the max backoff delay limit if the value is [Nullable::Null].
-        ///
         /// Defaults to `60 seconds` - see [defaults::max_delay].
-        #[serde(default = "defaults::max_delay")]
-        max_delay: Nullable<DurationString>,
+        #[serde(
+            default = "defaults::max_delay",
+            deserialize_with = "deserialize_duration"
+        )]
+        max_delay: Duration,
 
         /// Maximum amount of retries.
         ///
-        /// Removes the retry limit if the value is [Nullable::Null].
-        ///
         /// Defaults to `4` - see [defaults::max_retries].
         #[serde(default = "defaults::max_retries")]
-        max_retries: Nullable<usize>,
+        max_retries: usize,
 
         /// Maximum total backoff delay.
         ///
         /// Defaults to `None` - see [defaults::max_total_delay]
-        #[serde(default = "defaults::max_total_delay")]
-        max_total_delay: Option<DurationString>,
+        #[serde(
+            default = "defaults::max_total_delay",
+            deserialize_with = "deserialize_duration"
+        )]
+        max_total_delay: Duration,
 
         /// Whether jitter is enabled.
         ///
@@ -90,24 +90,23 @@ pub enum BackoffConfig {
         /// Initial backoff delay.
         ///
         /// Defaults to `500 millis` - see [defaults::delay].
-        #[serde(default = "defaults::delay")]
-        initial_delay: DurationString,
+        #[serde(default = "defaults::delay", deserialize_with = "deserialize_duration")]
+        initial_delay: Duration,
 
         /// Maximum backoff delay.
         ///
-        /// Removes the max backoff delay limit if the value is [Nullable::Null].
-        ///
         /// Defaults to `60 seconds` - see [defaults::max_delay].
-        #[serde(default = "defaults::max_delay")]
-        max_delay: Nullable<DurationString>,
+        #[serde(
+            default = "defaults::max_delay",
+            deserialize_with = "deserialize_duration"
+        )]
+        max_delay: Duration,
 
         /// Maximum amount of retries.
         ///
-        /// Removes the retry limit if the value is [Nullable::Null].
-        ///
         /// Defaults to `4` - see [defaults::max_retries].
         #[serde(default = "defaults::max_retries")]
-        max_retries: Nullable<usize>,
+        max_retries: usize,
 
         /// Whether jitter is enabled.
         ///
@@ -134,12 +133,9 @@ impl backon::BackoffBuilder for BackoffConfig {
                 jitter_enabled,
                 jitter_seed,
             } => {
-                let mut builder = backon::ConstantBuilder::new().with_delay(delay.into());
-
-                builder = match max_retries {
-                    Nullable::Some(max_retries) => builder.with_max_times(max_retries),
-                    Nullable::Null => builder.without_max_times(),
-                };
+                let mut builder = backon::ConstantBuilder::new()
+                    .with_delay(delay)
+                    .with_max_times(max_retries);
 
                 if jitter_enabled {
                     builder = builder.with_jitter();
@@ -162,20 +158,11 @@ impl backon::BackoffBuilder for BackoffConfig {
                 jitter_seed,
             } => {
                 let mut builder = backon::ExponentialBuilder::new()
-                    .with_min_delay(initial_delay.into())
-                    .with_factor(factor);
-
-                builder = match max_delay {
-                    Nullable::Some(max_delay) => builder.with_max_delay(max_delay.into()),
-                    Nullable::Null => builder.without_max_delay(),
-                };
-
-                builder = match max_retries {
-                    Nullable::Some(max_retries) => builder.with_max_times(max_retries),
-                    Nullable::Null => builder.without_max_times(),
-                };
-
-                builder = builder.with_total_delay(max_total_delay.map(Into::into));
+                    .with_min_delay(initial_delay)
+                    .with_factor(factor)
+                    .with_max_delay(max_delay)
+                    .with_max_times(max_retries)
+                    .with_total_delay(Some(max_total_delay));
 
                 if jitter_enabled {
                     builder = builder.with_jitter();
@@ -195,18 +182,10 @@ impl backon::BackoffBuilder for BackoffConfig {
                 jitter_enabled,
                 jitter_seed,
             } => {
-                let mut builder =
-                    backon::FibonacciBuilder::new().with_min_delay(initial_delay.into());
-
-                builder = match max_delay {
-                    Nullable::Some(max_delay) => builder.with_max_delay(max_delay.into()),
-                    Nullable::Null => builder.without_max_delay(),
-                };
-
-                builder = match max_retries {
-                    Nullable::Some(max_retries) => builder.with_max_times(max_retries),
-                    Nullable::Null => builder.without_max_times(),
-                };
+                let mut builder = backon::FibonacciBuilder::new()
+                    .with_min_delay(initial_delay)
+                    .with_max_delay(max_delay)
+                    .with_max_times(max_retries);
 
                 if jitter_enabled {
                     builder = builder.with_jitter();
@@ -224,18 +203,16 @@ impl backon::BackoffBuilder for BackoffConfig {
 
 /// Contains the defaults used by the [crate::BackoffConfig].
 pub mod defaults {
-    use crate::nullable::Nullable;
-    use duration_string::DurationString;
     use std::time::Duration;
 
     /// Default value for constant / initial backoff delay.
-    pub fn delay() -> DurationString {
-        Duration::from_millis(500).into()
+    pub const fn delay() -> Duration {
+        Duration::from_millis(500)
     }
 
     /// Default value for max retries.
-    pub const fn max_retries() -> Nullable<usize> {
-        Nullable::Some(4)
+    pub const fn max_retries() -> usize {
+        4
     }
 
     /// Default value whether jitter is enabled.
@@ -254,13 +231,13 @@ pub mod defaults {
     }
 
     /// Default value for max backoff delay.
-    pub fn max_delay() -> Nullable<DurationString> {
-        Nullable::Some(Duration::from_secs(30).into())
+    pub const fn max_delay() -> Duration {
+        Duration::from_secs(30)
     }
 
     /// Default value for max total backoff delay.
-    pub fn max_total_delay() -> Option<DurationString> {
-        Some(Duration::from_secs(60).into())
+    pub const fn max_total_delay() -> Duration {
+        Duration::from_secs(60)
     }
 }
 
@@ -273,8 +250,8 @@ mod tests {
     #[test]
     fn constant_backoff_config_to_backoff() {
         let config = BackoffConfig::Constant {
-            delay: Duration::from_secs(1).into(),
-            max_retries: Nullable::Some(3),
+            delay: Duration::from_secs(1),
+            max_retries: 3,
             jitter_enabled: false,
             jitter_seed: None,
         };
@@ -294,11 +271,11 @@ mod tests {
     #[test]
     fn exponential_backoff_config_to_backoff() {
         let config = BackoffConfig::Exponential {
-            initial_delay: Duration::from_millis(100).into(),
+            initial_delay: Duration::from_millis(100),
             factor: 2_f32,
-            max_delay: Nullable::Some(Duration::from_millis(800).into()),
-            max_retries: Nullable::Some(5),
-            max_total_delay: None,
+            max_delay: Duration::from_millis(800),
+            max_retries: 5,
+            max_total_delay: Duration::from_secs(1000),
             jitter_enabled: false,
             jitter_seed: None,
         };
@@ -318,11 +295,11 @@ mod tests {
     #[test]
     fn exponential_backoff_config_to_backoff_with_max_total_delay() {
         let config = BackoffConfig::Exponential {
-            initial_delay: Duration::from_millis(100).into(),
+            initial_delay: Duration::from_millis(100),
             factor: 2_f32,
-            max_delay: Nullable::Some(Duration::from_millis(800).into()),
-            max_retries: Nullable::Some(5),
-            max_total_delay: Some(Duration::from_millis(1500 + 1).into()),
+            max_delay: Duration::from_millis(800),
+            max_retries: 5,
+            max_total_delay: Duration::from_millis(1500 + 1),
             jitter_enabled: false,
             jitter_seed: None,
         };
@@ -342,9 +319,9 @@ mod tests {
     #[test]
     fn fibonacci_backoff_config_to_backoff() {
         let config = BackoffConfig::Fibonacci {
-            initial_delay: Duration::from_millis(100).into(),
-            max_delay: Nullable::Some(Duration::from_millis(800).into()),
-            max_retries: Nullable::Some(5),
+            initial_delay: Duration::from_millis(100),
+            max_delay: Duration::from_millis(800),
+            max_retries: 5,
             jitter_enabled: false,
             jitter_seed: None,
         };
