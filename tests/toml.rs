@@ -9,7 +9,7 @@ use std::time::Duration;
 const CONFIG_TOML_PATH: &str = "config.toml";
 
 #[test]
-fn constant_backoff_with_defaults_toml() {
+fn constant_backoff_with_defaults() {
     figment::Jail::expect_with(|jail| {
         jail.create_file(
             CONFIG_TOML_PATH,
@@ -40,7 +40,7 @@ fn constant_backoff_with_defaults_toml() {
 }
 
 #[test]
-fn constant_backoff_with_custom_values_toml() {
+fn constant_backoff_with_custom_values() {
     figment::Jail::expect_with(|jail| {
         jail.create_file(
             CONFIG_TOML_PATH,
@@ -75,7 +75,7 @@ fn constant_backoff_with_custom_values_toml() {
 }
 
 #[test]
-fn exponential_backoff_with_defaults_toml() {
+fn exponential_backoff_with_defaults() {
     figment::Jail::expect_with(|jail| {
         jail.create_file(
             CONFIG_TOML_PATH,
@@ -109,7 +109,7 @@ fn exponential_backoff_with_defaults_toml() {
 }
 
 #[test]
-fn exponential_backoff_with_custom_values_toml() {
+fn exponential_backoff_with_custom_values() {
     figment::Jail::expect_with(|jail| {
         jail.create_file(
             CONFIG_TOML_PATH,
@@ -150,7 +150,7 @@ fn exponential_backoff_with_custom_values_toml() {
 }
 
 #[test]
-fn fibonacci_backoff_with_defaults_toml() {
+fn fibonacci_backoff_with_defaults() {
     figment::Jail::expect_with(|jail| {
         jail.create_file(
             CONFIG_TOML_PATH,
@@ -182,7 +182,7 @@ fn fibonacci_backoff_with_defaults_toml() {
 }
 
 #[test]
-fn fibonacci_backoff_with_custom_values_toml() {
+fn fibonacci_backoff_with_custom_values() {
     figment::Jail::expect_with(|jail| {
         jail.create_file(
             CONFIG_TOML_PATH,
