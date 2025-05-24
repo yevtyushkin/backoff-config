@@ -1,6 +1,6 @@
 [package]
 name = "backoff-config"
-version = "0.0.4"
+version = "0.0.5"
 edition = "2024"
 authors = ["Daniyil Yevtyushkin <d.yevtyushkin.dev@gmail.com>"]
 description = "Flexible backoff configuration in Rust"
@@ -21,4 +21,4 @@ serde = { version = "1.0.219", default-features = false, features = ["derive", "
 [dev-dependencies]
 backon = "1.5.0"
 figment = { version = "0.10.19", features = ["env", "test", "toml"] }
-tokio = { version = "1.45.0", features = ["rt-multi-thread", "macros"] }
+tokio = { version = "1.45.1", features = ["rt-multi-thread", "macros"] }

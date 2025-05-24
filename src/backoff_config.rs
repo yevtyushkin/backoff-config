@@ -120,6 +120,9 @@ pub enum BackoffConfig {
         #[serde(default = "defaults::jitter_seed")]
         jitter_seed: Option<u64>,
     },
+
+    /// Configuration for [Backoff::NoBackoff].
+    NoBackoff,
 }
 
 impl backon::BackoffBuilder for BackoffConfig {
@@ -197,6 +200,8 @@ impl backon::BackoffBuilder for BackoffConfig {
 
                 Backoff::Fibonacci(builder.build())
             }
+
+            BackoffConfig::NoBackoff => Backoff::NoBackoff,
         }
     }
 }
@@ -336,5 +341,15 @@ mod tests {
                 .collect::<Vec<_>>(),
             vec![100, 100, 200, 300, 500]
         );
+    }
+
+    #[test]
+    fn no_backoff_backoff_config_to_backoff() {
+        let config = BackoffConfig::NoBackoff;
+
+        let mut backoff = config.build();
+        assert!(matches!(backoff, Backoff::NoBackoff));
+
+        assert!(backoff.next().is_none());
     }
 }

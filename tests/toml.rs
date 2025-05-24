@@ -217,3 +217,29 @@ fn fibonacci_backoff_with_custom_values() {
         Ok(())
     });
 }
+
+#[test]
+fn no_backoff() {
+    figment::Jail::expect_with(|jail| {
+        jail.create_file(
+            CONFIG_TOML_PATH,
+            r#"
+                [backoff]
+                strategy = "NoBackoff"
+            "#,
+        )?;
+
+        let config = figment::Figment::new()
+            .merge(Data::<Toml>::file(CONFIG_TOML_PATH))
+            .extract::<Config>()?;
+
+        assert_eq!(
+            config,
+            Config {
+                backoff: BackoffConfig::NoBackoff
+            }
+        );
+
+        Ok(())
+    });
+}

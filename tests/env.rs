@@ -181,3 +181,23 @@ fn fibonacci_backoff_with_custom_values() {
         Ok(())
     });
 }
+
+#[test]
+fn no_backoff() {
+    figment::Jail::expect_with(|jail| {
+        jail.set_env("CONFIG__BACKOFF__STRATEGY", "NoBackoff");
+
+        let config = figment::Figment::new()
+            .merge(Env::prefixed("CONFIG__").split("__"))
+            .extract::<Config>()?;
+
+        assert_eq!(
+            config,
+            Config {
+                backoff: BackoffConfig::NoBackoff
+            }
+        );
+
+        Ok(())
+    });
+}
