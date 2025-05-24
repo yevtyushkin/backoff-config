@@ -12,6 +12,9 @@ pub enum Backoff {
 
     /// Fibonacci backoff.
     Fibonacci(FibonacciBackoff),
+
+    /// No backoff.
+    NoBackoff,
 }
 
 impl Iterator for Backoff {
@@ -22,6 +25,7 @@ impl Iterator for Backoff {
             Backoff::Constant(c) => c.next(),
             Backoff::Exponential(e) => e.next(),
             Backoff::Fibonacci(f) => f.next(),
+            Backoff::NoBackoff => None,
         }
     }
 }
