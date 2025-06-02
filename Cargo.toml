@@ -14,11 +14,11 @@ keywords = ["backoff", "retry", "configuration", "serde", "backon"]
 exclude = ["examples/*", "tests/*", "*.md"]
 
 [dependencies]
-backon = { version = "1.5.0", default-features = false, features = ["std"] }
+backon = { version = "1.5.1", default-features = false, features = ["std"] }
 duration-str = { version = "0.17.0", default-features = false, features = ["no_calc", "serde"] }
 serde = { version = "1.0.219", default-features = false, features = ["derive", "std"] }
 
 [dev-dependencies]
-backon = "1.5.0"
+backon = "1.5.1"
 figment = { version = "0.10.19", features = ["env", "test", "toml"] }
 tokio = { version = "1.45.1", features = ["rt-multi-thread", "macros"] }
