@@ -274,6 +274,27 @@ mod tests {
     }
 
     #[test]
+    fn constant_backoff_config_to_backoff_with_jitter() {
+        let config = BackoffConfig::Constant {
+            delay: Duration::from_secs(1),
+            max_retries: 3,
+            jitter_enabled: true,
+            jitter_seed: Some(0),
+        };
+
+        let backoff = config.build();
+        assert!(matches!(backoff, Backoff::Constant(_)));
+
+        assert_eq!(
+            backoff
+                .take(100)
+                .map(|duration| duration.as_millis())
+                .collect::<Vec<_>>(),
+            vec![1552, 1096, 1593]
+        );
+    }
+
+    #[test]
     fn exponential_backoff_config_to_backoff() {
         let config = BackoffConfig::Exponential {
             initial_delay: Duration::from_millis(100),
@@ -294,6 +315,30 @@ mod tests {
                 .map(|duration| duration.as_millis())
                 .collect::<Vec<_>>(),
             vec![100, 200, 400, 800, 800]
+        );
+    }
+
+    #[test]
+    fn exponential_backoff_config_to_backoff_with_jitter() {
+        let config = BackoffConfig::Exponential {
+            initial_delay: Duration::from_millis(100),
+            factor: 2_f32,
+            max_delay: Duration::from_millis(800),
+            max_retries: 5,
+            max_total_delay: Duration::from_secs(1000),
+            jitter_enabled: true,
+            jitter_seed: Some(0),
+        };
+
+        let backoff = config.build();
+        assert!(matches!(backoff, Backoff::Exponential(_)));
+
+        assert_eq!(
+            backoff
+                .take(100)
+                .map(|duration| duration.as_millis())
+                .collect::<Vec<_>>(),
+            vec![155, 219, 637, 923, 1102]
         );
     }
 
@@ -340,6 +385,28 @@ mod tests {
                 .map(|duration| duration.as_millis())
                 .collect::<Vec<_>>(),
             vec![100, 100, 200, 300, 500]
+        );
+    }
+
+    #[test]
+    fn fibonacci_backoff_config_to_backoff_with_jitter() {
+        let config = BackoffConfig::Fibonacci {
+            initial_delay: Duration::from_millis(100),
+            max_delay: Duration::from_millis(800),
+            max_retries: 5,
+            jitter_enabled: true,
+            jitter_seed: Some(0),
+        };
+
+        let backoff = config.build();
+        assert!(matches!(backoff, Backoff::Fibonacci(_)));
+
+        assert_eq!(
+            backoff
+                .take(usize::MAX)
+                .map(|duration| duration.as_millis())
+                .collect::<Vec<_>>(),
+            vec![155, 109, 259, 315, 537]
         );
     }
 
