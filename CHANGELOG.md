@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0](https://github.com/yevtyushkin/backoff-config/compare/v0.0.8...v0.0.9) - 2025-06-05
+
+### Other
+
+- Introduce per-strategy configs with `Default` impls ([#15](https://github.com/yevtyushkin/backoff-config/pull/15))
+
 ## [0.0.8](https://github.com/yevtyushkin/backoff-config/compare/v0.0.7...v0.0.8) - 2025-06-05
 
 ### Other
