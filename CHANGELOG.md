@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1](https://github.com/yevtyushkin/backoff-config/compare/v0.1.0...v0.1.1) - 2025-06-05
+
+### Other
+
+- Fix docs for default values ([#17](https://github.com/yevtyushkin/backoff-config/pull/17))
+
 ## [0.1.0](https://github.com/yevtyushkin/backoff-config/compare/v0.0.8...v0.0.9) - 2025-06-05
 
 ### Other
