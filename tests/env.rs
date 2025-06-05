@@ -17,12 +17,12 @@ fn constant_backoff_with_defaults() {
         assert_eq!(
             config,
             Config {
-                backoff: BackoffConfig::Constant {
+                backoff: BackoffConfig::Constant(ConstantBackoffConfig {
                     delay: defaults::delay(),
                     max_retries: defaults::max_retries(),
                     jitter_enabled: defaults::jitter_enabled(),
                     jitter_seed: defaults::jitter_seed(),
-                }
+                })
             }
         );
 
@@ -47,12 +47,12 @@ fn constant_backoff_with_custom_values() {
         assert_eq!(
             config,
             Config {
-                backoff: BackoffConfig::Constant {
+                backoff: BackoffConfig::Constant(ConstantBackoffConfig {
                     delay: Duration::from_secs(123),
                     max_retries: 456,
                     jitter_enabled: false,
                     jitter_seed: Some(1337),
-                }
+                }),
             }
         );
 
@@ -72,7 +72,7 @@ fn exponential_backoff_with_defaults() {
         assert_eq!(
             config,
             Config {
-                backoff: BackoffConfig::Exponential {
+                backoff: BackoffConfig::Exponential(ExponentialBackoffConfig {
                     initial_delay: defaults::delay(),
                     factor: defaults::factor(),
                     max_delay: defaults::max_delay(),
@@ -80,7 +80,7 @@ fn exponential_backoff_with_defaults() {
                     max_total_delay: defaults::max_total_delay(),
                     jitter_enabled: defaults::jitter_enabled(),
                     jitter_seed: defaults::jitter_seed(),
-                }
+                })
             }
         );
 
@@ -108,7 +108,7 @@ fn exponential_backoff_with_custom_values() {
         assert_eq!(
             config,
             Config {
-                backoff: BackoffConfig::Exponential {
+                backoff: BackoffConfig::Exponential(ExponentialBackoffConfig {
                     initial_delay: Duration::from_millis(750),
                     factor: 3.5,
                     max_delay: Duration::from_secs(20),
@@ -116,7 +116,7 @@ fn exponential_backoff_with_custom_values() {
                     max_total_delay: Duration::from_secs(90),
                     jitter_enabled: false,
                     jitter_seed: Some(1337),
-                }
+                })
             }
         );
 
@@ -136,13 +136,13 @@ fn fibonacci_backoff_with_defaults() {
         assert_eq!(
             config,
             Config {
-                backoff: BackoffConfig::Fibonacci {
+                backoff: BackoffConfig::Fibonacci(FibonacciBackoffConfig {
                     initial_delay: defaults::delay(),
                     max_delay: defaults::max_delay(),
                     max_retries: defaults::max_retries(),
                     jitter_enabled: defaults::jitter_enabled(),
                     jitter_seed: defaults::jitter_seed(),
-                }
+                })
             }
         );
 
@@ -168,13 +168,13 @@ fn fibonacci_backoff_with_custom_values() {
         assert_eq!(
             config,
             Config {
-                backoff: BackoffConfig::Fibonacci {
+                backoff: BackoffConfig::Fibonacci(FibonacciBackoffConfig {
                     initial_delay: Duration::from_millis(1234),
                     max_delay: Duration::from_nanos(123456789),
                     max_retries: 10,
                     jitter_enabled: false,
                     jitter_seed: Some(1337),
-                }
+                })
             }
         );
 
