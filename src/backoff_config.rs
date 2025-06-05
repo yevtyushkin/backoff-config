@@ -89,7 +89,7 @@ pub struct ExponentialBackoffConfig {
 
     /// Maximum backoff delay.
     ///
-    /// Defaults to `60 seconds` - see [defaults::max_delay].
+    /// Defaults to `30 seconds` - see [defaults::max_delay].
     #[serde(
         default = "defaults::max_delay",
         deserialize_with = "deserialize_duration"
@@ -106,7 +106,7 @@ pub struct ExponentialBackoffConfig {
 
     /// Maximum total backoff delay.
     ///
-    /// Defaults to `None` - see [defaults::max_total_delay]
+    /// Defaults to `60 seconds` - see [defaults::max_total_delay]
     #[serde(
         default = "defaults::max_total_delay",
         deserialize_with = "deserialize_duration"
@@ -141,7 +141,7 @@ pub struct FibonacciBackoffConfig {
 
     /// Maximum backoff delay.
     ///
-    /// Defaults to `60 seconds` - see [defaults::max_delay].
+    /// Defaults to `30 seconds` - see [defaults::max_delay].
     #[serde(
         default = "defaults::max_delay",
         deserialize_with = "deserialize_duration"
