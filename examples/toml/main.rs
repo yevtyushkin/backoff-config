@@ -1,7 +1,7 @@
 use backoff_config::BackoffConfig;
 use backon::Retryable;
-use figment::providers::{Data, Toml};
 use figment::Figment;
+use figment::providers::{Data, Toml};
 use log::{info, warn};
 use rand::random_ratio;
 use serde::Deserialize;
