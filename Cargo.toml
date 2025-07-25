@@ -24,6 +24,6 @@ anyhow = "1.0.98"
 backon = "1.5.1"
 figment = { version = "0.10.19", features = ["env", "test", "toml"] }
 log = "0.4.27"
-rand = "0.9.1"
+rand = "0.9.2"
 simple_logger = "5.0.0"
 tokio = { version = "1.46.1", features = ["rt-multi-thread", "macros"] }
