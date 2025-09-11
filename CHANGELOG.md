@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3](https://github.com/yevtyushkin/backoff-config/compare/v0.1.2...v0.1.3) - 2025-09-11
+
+### Other
+
+- Bump log from 0.4.27 to 0.4.28 ([#26](https://github.com/yevtyushkin/backoff-config/pull/26))
+- Bump anyhow from 1.0.98 to 1.0.99 ([#25](https://github.com/yevtyushkin/backoff-config/pull/25))
+- Bump actions/checkout from 4 to 5 ([#24](https://github.com/yevtyushkin/backoff-config/pull/24))
+- Bump tokio from 1.46.1 to 1.47.1 ([#23](https://github.com/yevtyushkin/backoff-config/pull/23))
+- Bump backon from 1.5.1 to 1.5.2 ([#22](https://github.com/yevtyushkin/backoff-config/pull/22))
+
 ## [0.1.2](https://github.com/yevtyushkin/backoff-config/compare/v0.1.1...v0.1.2) - 2025-07-25
 
 ### Other
