@@ -16,7 +16,7 @@ exclude = ["examples/*", "tests/*", "*.md"]
 [dependencies]
 backon = { version = "1.5.2", default-features = false, features = ["std"] }
 duration-str = { version = "0.17.0", default-features = false, features = ["no_calc", "serde"] }
-serde = { version = "1.0.219", default-features = false, features = ["derive", "std"] }
+serde = { version = "1.0.224", default-features = false, features = ["derive", "std"] }
 smart-default = "0.7.1"
 
 [dev-dependencies]
