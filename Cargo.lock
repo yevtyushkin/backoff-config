@@ -86,7 +86,7 @@ version = "3.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "faf9468729b8cbcea668e36183cb69d317348c2e08e994829fb56ebfdfbaac34"
 dependencies = [
- "windows-sys 0.59.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -100,9 +100,9 @@ dependencies = [
 
 [[package]]
 name = "duration-str"
-version = "0.19.0"
+version = "0.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "12494809f9915b6132014cc259c4e204ab53ab6c6dd2225672703b5359267d82"
+checksum = "ae065b0fbd186e5014e14be5f9411e4cb4a2ec14168e8a34e38183a3d1c07544"
 dependencies = [
  "rust_decimal",
  "serde",
