@@ -20,7 +20,7 @@ serde = { version = "1.0.228", default-features = false, features = ["derive", "
 smart-default = "0.7.1"
 
 [dev-dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.102"
 backon = "1.6.0"
 figment = { version = "0.10.19", features = ["env", "test", "toml"] }
 log = "0.4.29"
